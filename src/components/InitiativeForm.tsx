@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,14 +12,15 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { InitiativeFormData } from "@/types/Initiative";
+import { Initiative, InitiativeFormData } from "@/types/Initiative";
 
 interface InitiativeFormProps {
-  onSubmit: (data: InitiativeFormData) => void;
+  onSubmit: (data: InitiativeFormData, editId?: string) => void;
   onCancel: () => void;
+  initiative?: Initiative;
 }
 
-export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
+export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFormProps) => {
   const [formData, setFormData] = useState<InitiativeFormData>({
     title: "",
     description: "",
@@ -29,17 +30,30 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
     status: "planned",
   });
 
+  useEffect(() => {
+    if (initiative) {
+      setFormData({
+        title: initiative.title,
+        description: initiative.description,
+        impact: initiative.impact,
+        confidence: initiative.confidence,
+        ease: initiative.ease,
+        status: initiative.status,
+      });
+    }
+  }, [initiative]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData, initiative?.id);
   };
 
   return (
     <Card className="w-full max-w-lg mx-auto animate-fadeIn">
       <CardHeader>
-        <CardTitle>New Initiative</CardTitle>
+        <CardTitle>{initiative ? "Edit Initiative" : "New Initiative"}</CardTitle>
         <CardDescription>
-          Add a new initiative using ICE scoring (Impact, Confidence, Ease)
+          {initiative ? "Modify" : "Add"} an initiative using ICE scoring (Impact, Confidence, Ease)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -113,7 +127,7 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
             <Button variant="outline" onClick={onCancel}>
               Cancel
             </Button>
-            <Button type="submit">Add Initiative</Button>
+            <Button type="submit">{initiative ? "Save Changes" : "Add Initiative"}</Button>
           </div>
         </form>
       </CardContent>

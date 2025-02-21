@@ -12,29 +12,41 @@ import { calculateICEScore } from "@/lib/priorityUtils";
 const Index = () => {
   const [initiatives, setInitiatives] = useState<Initiative[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [editingInitiative, setEditingInitiative] = useState<Initiative | undefined>();
   const { toast } = useToast();
 
-  const handleSubmit = (formData: InitiativeFormData) => {
-    const newInitiative: Initiative = {
-      ...formData,
-      id: crypto.randomUUID(),
-      createdAt: new Date(),
-    };
-
-    setInitiatives([...initiatives, newInitiative]);
+  const handleSubmit = (formData: InitiativeFormData, editId?: string) => {
+    if (editId) {
+      // Update existing initiative
+      setInitiatives(initiatives.map(initiative => 
+        initiative.id === editId 
+          ? { ...initiative, ...formData }
+          : initiative
+      ));
+      toast({
+        title: "Initiative updated",
+        description: "Your initiative has been successfully updated.",
+      });
+    } else {
+      // Add new initiative
+      const newInitiative: Initiative = {
+        ...formData,
+        id: crypto.randomUUID(),
+        createdAt: new Date(),
+      };
+      setInitiatives([...initiatives, newInitiative]);
+      toast({
+        title: "Initiative added",
+        description: "Your new initiative has been successfully added.",
+      });
+    }
     setShowForm(false);
-    toast({
-      title: "Initiative added",
-      description: "Your new initiative has been successfully added.",
-    });
+    setEditingInitiative(undefined);
   };
 
   const handleInitiativeClick = (initiative: Initiative) => {
-    const score = calculateICEScore(initiative);
-    toast({
-      title: initiative.title,
-      description: `ICE Score: ${score.toFixed(1)} (Impact: ${initiative.impact}, Confidence: ${initiative.confidence}, Ease: ${initiative.ease})`,
-    });
+    setEditingInitiative(initiative);
+    setShowForm(true);
   };
 
   return (
@@ -48,7 +60,10 @@ const Index = () => {
             </p>
           </div>
           <Button
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setEditingInitiative(undefined);
+              setShowForm(true);
+            }}
             className="animate-fadeIn"
             size="lg"
           >
@@ -59,7 +74,11 @@ const Index = () => {
         {showForm ? (
           <InitiativeForm
             onSubmit={handleSubmit}
-            onCancel={() => setShowForm(false)}
+            onCancel={() => {
+              setShowForm(false);
+              setEditingInitiative(undefined);
+            }}
+            initiative={editingInitiative}
           />
         ) : (
           <Tabs defaultValue="matrix" className="w-full">

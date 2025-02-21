@@ -22,17 +22,17 @@ export const PriorityMatrix = ({
   const getQuadrantInitiatives = (quadrantTitle: string) => {
     return initiatives.filter((initiative) => {
       const highImpact = initiative.impact > 3;
-      const highEffort = initiative.effort > 3;
+      const highEase = initiative.ease > 3;
 
       switch (quadrantTitle) {
         case "Quick Wins":
-          return highImpact && !highEffort;
+          return highImpact && highEase;
         case "Major Projects":
-          return highImpact && highEffort;
+          return highImpact && !highEase;
         case "Fill Ins":
-          return !highImpact && !highEffort;
+          return !highImpact && highEase;
         case "Thankless Tasks":
-          return !highImpact && highEffort;
+          return !highImpact && !highEase;
         default:
           return false;
       }
