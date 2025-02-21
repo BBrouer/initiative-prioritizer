@@ -1,7 +1,7 @@
 
 import { Initiative } from "@/types/Initiative";
 import { InitiativeCard } from "./InitiativeCard";
-import { calculateScore } from "@/lib/priorityUtils";
+import { calculateICEScore } from "@/lib/priorityUtils";
 
 interface InitiativeListProps {
   initiatives: Initiative[];
@@ -13,7 +13,7 @@ export const InitiativeList = ({
   onInitiativeClick,
 }: InitiativeListProps) => {
   const sortedInitiatives = [...initiatives].sort(
-    (a, b) => calculateScore(b) - calculateScore(a)
+    (a, b) => calculateICEScore(b) - calculateICEScore(a)
   );
 
   return (

@@ -24,8 +24,8 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
     title: "",
     description: "",
     impact: 3,
-    effort: 3,
-    urgency: 3,
+    confidence: 3,
+    ease: 3,
     status: "planned",
   });
 
@@ -39,7 +39,7 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
       <CardHeader>
         <CardTitle>New Initiative</CardTitle>
         <CardDescription>
-          Add a new initiative to prioritize
+          Add a new initiative using ICE scoring (Impact, Confidence, Ease)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -83,11 +83,11 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Effort (1-5)</Label>
+              <Label>Confidence (1-5)</Label>
               <Slider
-                value={[formData.effort]}
+                value={[formData.confidence]}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, effort: value[0] })
+                  setFormData({ ...formData, confidence: value[0] })
                 }
                 min={1}
                 max={5}
@@ -96,11 +96,11 @@ export const InitiativeForm = ({ onSubmit, onCancel }: InitiativeFormProps) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Urgency (1-5)</Label>
+              <Label>Ease (1-5)</Label>
               <Slider
-                value={[formData.urgency]}
+                value={[formData.ease]}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, urgency: value[0] })
+                  setFormData({ ...formData, ease: value[0] })
                 }
                 min={1}
                 max={5}

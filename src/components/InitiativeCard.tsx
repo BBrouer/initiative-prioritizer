@@ -2,7 +2,7 @@
 import { Initiative } from "@/types/Initiative";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { calculateScore } from "@/lib/priorityUtils";
+import { calculateICEScore } from "@/lib/priorityUtils";
 
 interface InitiativeCardProps {
   initiative: Initiative;
@@ -10,7 +10,7 @@ interface InitiativeCardProps {
 }
 
 export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => {
-  const score = calculateScore(initiative);
+  const score = calculateICEScore(initiative);
   
   return (
     <Card
@@ -35,7 +35,7 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <Badge variant="secondary">Impact: {initiative.impact}</Badge>
-          <Badge variant="secondary">Effort: {initiative.effort}</Badge>
+          <Badge variant="secondary">Ease: {initiative.ease}</Badge>
         </div>
         <Badge 
           className={`
@@ -44,7 +44,7 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
             ${score < 3 ? "bg-urgent" : ""}
           `}
         >
-          Score: {score.toFixed(1)}
+          ICE: {score.toFixed(1)}
         </Badge>
       </div>
     </Card>

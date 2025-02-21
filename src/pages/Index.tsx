@@ -7,6 +7,7 @@ import { InitiativeList } from "@/components/InitiativeList";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
+import { calculateICEScore } from "@/lib/priorityUtils";
 
 const Index = () => {
   const [initiatives, setInitiatives] = useState<Initiative[]>([]);
@@ -29,13 +30,10 @@ const Index = () => {
   };
 
   const handleInitiativeClick = (initiative: Initiative) => {
+    const score = calculateICEScore(initiative);
     toast({
       title: initiative.title,
-      description: `Score: ${(
-        initiative.impact * 0.4 +
-        initiative.urgency * 0.4 +
-        (6 - initiative.effort) * 0.2
-      ).toFixed(1)}`,
+      description: `ICE Score: ${score.toFixed(1)} (Impact: ${initiative.impact}, Confidence: ${initiative.confidence}, Ease: ${initiative.ease})`,
     });
   };
 
@@ -44,9 +42,9 @@ const Index = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2">Initiative Prioritizer</h1>
+            <h1 className="text-4xl font-bold mb-2">Initiative Prioritizer (ICE)</h1>
             <p className="text-muted-foreground">
-              Organize and prioritize your initiatives effectively
+              Prioritize initiatives using ICE scoring (Impact, Confidence, Ease)
             </p>
           </div>
           <Button

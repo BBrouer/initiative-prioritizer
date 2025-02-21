@@ -1,26 +1,23 @@
 
 import { Initiative } from "@/types/Initiative";
 
-export const calculateScore = (initiative: Initiative): number => {
-  const impactWeight = 0.4;
-  const urgencyWeight = 0.4;
-  const effortWeight = 0.2;
-
-  const effortInverse = 6 - initiative.effort; // Invert effort so lower effort = higher score
+export const calculateICEScore = (initiative: Initiative): number => {
+  // Equal weights for ICE scoring (1/3 each)
+  const weight = 1/3;
   
   return (
-    initiative.impact * impactWeight +
-    initiative.urgency * urgencyWeight +
-    effortInverse * effortWeight
+    initiative.impact * weight +
+    initiative.confidence * weight +
+    initiative.ease * weight
   );
 };
 
-export const getQuadrant = (impact: number, effort: number): string => {
+export const getQuadrant = (impact: number, ease: number): string => {
   const highImpact = impact > 3;
-  const highEffort = effort > 3;
+  const highEase = ease > 3;
 
-  if (highImpact && !highEffort) return "Quick Wins";
-  if (highImpact && highEffort) return "Major Projects";
-  if (!highImpact && !highEffort) return "Fill Ins";
+  if (highImpact && highEase) return "Quick Wins";
+  if (highImpact && !highEase) return "Major Projects";
+  if (!highImpact && highEase) return "Fill Ins";
   return "Thankless Tasks";
 };
