@@ -5,6 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -12,7 +19,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Initiative, InitiativeFormData } from "@/types/Initiative";
+import { Initiative, InitiativeFormData, ImpactLevel } from "@/types/Initiative";
+import { calculateImpactScore } from "@/lib/priorityUtils";
 
 interface InitiativeFormProps {
   onSubmit: (data: InitiativeFormData, editId?: string) => void;
@@ -25,7 +33,10 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     title: "",
     hypothesis: "",
     description: "",
-    impact: 3,
+    costImpact: "low",
+    productivityImpact: "low",
+    operationalImpact: "low",
+    impact: 1,
     confidence: 3,
     ease: 3,
     status: "planned",
@@ -37,6 +48,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
         title: initiative.title,
         hypothesis: initiative.hypothesis,
         description: initiative.description,
+        costImpact: initiative.costImpact,
+        productivityImpact: initiative.productivityImpact,
+        operationalImpact: initiative.operationalImpact,
         impact: initiative.impact,
         confidence: initiative.confidence,
         ease: initiative.ease,
@@ -47,7 +61,12 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData, initiative?.id);
+    // Calculate impact score based on hypothesis and impact levels
+    const calculatedData = {
+      ...formData,
+      impact: calculateImpactScore({ ...formData, id: "", createdAt: new Date() }),
+    };
+    onSubmit(calculatedData, initiative?.id);
   };
 
   return (
@@ -99,20 +118,66 @@ Target metric: [target value]"
             />
           </div>
 
-          <div className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <Label>Impact (1-5)</Label>
-              <Slider
-                value={[formData.impact]}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, impact: value[0] })
+              <Label>Cost Impact</Label>
+              <Select
+                value={formData.costImpact}
+                onValueChange={(value: ImpactLevel) =>
+                  setFormData({ ...formData, costImpact: value })
                 }
-                min={1}
-                max={5}
-                step={1}
-              />
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
+            <div className="space-y-2">
+              <Label>Productivity Impact</Label>
+              <Select
+                value={formData.productivityImpact}
+                onValueChange={(value: ImpactLevel) =>
+                  setFormData({ ...formData, productivityImpact: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Operational Impact</Label>
+              <Select
+                value={formData.operationalImpact}
+                onValueChange={(value: ImpactLevel) =>
+                  setFormData({ ...formData, operationalImpact: value })
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="medium">Medium</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-4">
             <div className="space-y-2">
               <Label>Confidence (1-5)</Label>
               <Slider

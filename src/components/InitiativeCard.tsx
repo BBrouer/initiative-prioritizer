@@ -36,6 +36,11 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
         <p className="text-sm text-muted-foreground line-clamp-2">
           {initiative.description}
         </p>
+        <div className="flex gap-2 flex-wrap">
+          <Badge variant="outline">Cost: {initiative.costImpact}</Badge>
+          <Badge variant="outline">Productivity: {initiative.productivityImpact}</Badge>
+          <Badge variant="outline">Operational: {initiative.operationalImpact}</Badge>
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex gap-2">

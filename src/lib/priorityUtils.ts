@@ -1,5 +1,35 @@
 
-import { Initiative } from "@/types/Initiative";
+import { Initiative, ImpactLevel } from "@/types/Initiative";
+
+const getImpactScore = (level: ImpactLevel): number => {
+  switch (level) {
+    case "high":
+      return 5;
+    case "medium":
+      return 3;
+    case "low":
+      return 1;
+    default:
+      return 0;
+  }
+};
+
+export const calculateImpactScore = (initiative: Initiative): number => {
+  // If no hypothesis, impact score is minimum
+  if (!initiative.hypothesis.trim()) {
+    return 1;
+  }
+
+  // Calculate average impact from all three dimensions
+  const avgImpact = (
+    getImpactScore(initiative.costImpact) +
+    getImpactScore(initiative.productivityImpact) +
+    getImpactScore(initiative.operationalImpact)
+  ) / 3;
+
+  // Round to nearest whole number since impact is stored as integer
+  return Math.round(avgImpact);
+};
 
 export const calculateICEScore = (initiative: Initiative): number => {
   // Equal weights for ICE scoring (1/3 each)
