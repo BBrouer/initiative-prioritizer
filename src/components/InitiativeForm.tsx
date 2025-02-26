@@ -23,6 +23,7 @@ interface InitiativeFormProps {
 export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFormProps) => {
   const [formData, setFormData] = useState<InitiativeFormData>({
     title: "",
+    hypothesis: "",
     description: "",
     impact: 3,
     confidence: 3,
@@ -34,6 +35,7 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     if (initiative) {
       setFormData({
         title: initiative.title,
+        hypothesis: initiative.hypothesis,
         description: initiative.description,
         impact: initiative.impact,
         confidence: initiative.confidence,
@@ -70,6 +72,21 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
             />
           </div>
           
+          <div className="space-y-2">
+            <Label htmlFor="hypothesis">Hypothesis</Label>
+            <Textarea
+              id="hypothesis"
+              value={formData.hypothesis}
+              onChange={(e) =>
+                setFormData({ ...formData, hypothesis: e.target.value })
+              }
+              placeholder="We believe that... [your hypothesis]
+Baseline metric: [current value]
+Target metric: [target value]"
+              required
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea

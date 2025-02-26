@@ -29,9 +29,14 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
           {initiative.status}
         </Badge>
       </div>
-      <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-        {initiative.description}
-      </p>
+      <div className="space-y-2 mb-4">
+        <p className="text-sm text-muted-foreground line-clamp-2">
+          <span className="font-medium">Hypothesis:</span> {initiative.hypothesis}
+        </p>
+        <p className="text-sm text-muted-foreground line-clamp-2">
+          {initiative.description}
+        </p>
+      </div>
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <Badge variant="secondary">Impact: {initiative.impact}</Badge>

@@ -2,6 +2,7 @@
 export type Initiative = {
   id: string;
   title: string;
+  hypothesis: string;
   description: string;
   impact: number; // 1-5
   confidence: number; // 1-5 (replaces urgency)
