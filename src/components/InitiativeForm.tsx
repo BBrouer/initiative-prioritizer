@@ -1,15 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Card,
   CardContent,
@@ -19,7 +11,9 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Initiative, InitiativeFormData, ImpactLevel } from "@/types/Initiative";
-import { calculateImpactScore, calculateConfidenceScore } from "@/lib/priorityUtils";
+import { InitiativeFormFields } from "./initiative-form/InitiativeFormFields";
+import { ImpactSection } from "./initiative-form/ImpactSection";
+import { ConfidenceSection } from "./initiative-form/ConfidenceSection";
 
 interface InitiativeFormProps {
   onSubmit: (data: InitiativeFormData, editId?: string) => void;
@@ -62,18 +56,11 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const baseInitiative = { 
-      ...formData, 
-      id: "", 
-      createdAt: new Date(),
-    };
-    // Calculate impact and confidence scores
-    const calculatedData = {
-      ...formData,
-      impact: calculateImpactScore(baseInitiative),
-      confidence: calculateConfidenceScore(baseInitiative),
-    };
-    onSubmit(calculatedData, initiative?.id);
+    onSubmit(formData, initiative?.id);
+  };
+
+  const handleUpdate = (field: string, value: string | ImpactLevel | number) => {
+    setFormData({ ...formData, [field]: value });
   };
 
   return (
@@ -86,172 +73,33 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-              required
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="hypothesis">Hypothesis</Label>
-            <Textarea
-              id="hypothesis"
-              value={formData.hypothesis}
-              onChange={(e) =>
-                setFormData({ ...formData, hypothesis: e.target.value })
-              }
-              placeholder="We believe that... [your hypothesis]
-Baseline metric: [current value]
-Target metric: [target value]"
-              required
-            />
-          </div>
+          <InitiativeFormFields
+            title={formData.title}
+            hypothesis={formData.hypothesis}
+            description={formData.description}
+            onUpdate={handleUpdate}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              required
-            />
-          </div>
+          <ImpactSection
+            costImpact={formData.costImpact}
+            productivityImpact={formData.productivityImpact}
+            operationalImpact={formData.operationalImpact}
+            onUpdate={handleUpdate}
+          />
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <Label>Cost Impact</Label>
-              <Select
-                value={formData.costImpact}
-                onValueChange={(value: ImpactLevel) =>
-                  setFormData({ ...formData, costImpact: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Productivity Impact</Label>
-              <Select
-                value={formData.productivityImpact}
-                onValueChange={(value: ImpactLevel) =>
-                  setFormData({ ...formData, productivityImpact: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Operational Impact</Label>
-              <Select
-                value={formData.operationalImpact}
-                onValueChange={(value: ImpactLevel) =>
-                  setFormData({ ...formData, operationalImpact: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="space-y-4 mt-6">
-            <h3 className="font-medium">Confidence Dimensions</h3>
-            <div className="grid gap-4 md:grid-cols-3">
-              <div className="space-y-2">
-                <Label>Data Confidence</Label>
-                <Select
-                  value={formData.dataConfidence}
-                  onValueChange={(value: ImpactLevel) =>
-                    setFormData({ ...formData, dataConfidence: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Market Confidence</Label>
-                <Select
-                  value={formData.marketConfidence}
-                  onValueChange={(value: ImpactLevel) =>
-                    setFormData({ ...formData, marketConfidence: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Technical Confidence</Label>
-                <Select
-                  value={formData.technicalConfidence}
-                  onValueChange={(value: ImpactLevel) =>
-                    setFormData({ ...formData, technicalConfidence: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
+          <ConfidenceSection
+            dataConfidence={formData.dataConfidence}
+            marketConfidence={formData.marketConfidence}
+            technicalConfidence={formData.technicalConfidence}
+            onUpdate={handleUpdate}
+          />
 
           <div className="space-y-2">
             <Label>Ease (1-5)</Label>
             <Slider
               value={[formData.ease]}
               onValueChange={(value) =>
-                setFormData({ ...formData, ease: value[0] })
+                handleUpdate("ease", value[0])
               }
               min={1}
               max={5}
