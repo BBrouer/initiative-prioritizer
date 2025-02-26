@@ -32,15 +32,36 @@ export const calculateImpactScore = (initiative: Initiative): number => {
 };
 
 export const calculateConfidenceScore = (initiative: Initiative): number => {
-  // Calculate average confidence from all three dimensions
-  const avgConfidence = (
-    getImpactScore(initiative.dataConfidence) +
-    getImpactScore(initiative.marketConfidence) +
-    getImpactScore(initiative.technicalConfidence)
-  ) / 3;
+  // If no hypothesis, confidence is minimum
+  if (!initiative.hypothesis.trim()) {
+    return 1;
+  }
 
-  // Round to nearest whole number since confidence is stored as integer
-  return Math.round(avgConfidence);
+  // Count how many confidence dimensions are "high"
+  const highConfidenceCount = [
+    initiative.dataConfidence,
+    initiative.marketConfidence,
+    initiative.technicalConfidence
+  ].filter(confidence => confidence === "high").length;
+
+  // Count how many confidence dimensions are at least "medium"
+  const mediumOrHighConfidenceCount = [
+    initiative.dataConfidence,
+    initiative.marketConfidence,
+    initiative.technicalConfidence
+  ].filter(confidence => confidence === "high" || confidence === "medium").length;
+
+  // Determine confidence level based on validation state
+  if (highConfidenceCount >= 2) {
+    // Hypothesis validated (at least 2 high confidence dimensions)
+    return 5;
+  } else if (mediumOrHighConfidenceCount >= 2) {
+    // Hypothesis supported (at least 2 medium or higher confidence dimensions)
+    return 3;
+  } else {
+    // Hypothesis not supported
+    return 1;
+  }
 };
 
 export const calculateICEScore = (initiative: Initiative): number => {
