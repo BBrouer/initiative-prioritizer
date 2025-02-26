@@ -31,6 +31,18 @@ export const calculateImpactScore = (initiative: Initiative): number => {
   return Math.round(avgImpact);
 };
 
+export const calculateConfidenceScore = (initiative: Initiative): number => {
+  // Calculate average confidence from all three dimensions
+  const avgConfidence = (
+    getImpactScore(initiative.dataConfidence) +
+    getImpactScore(initiative.marketConfidence) +
+    getImpactScore(initiative.technicalConfidence)
+  ) / 3;
+
+  // Round to nearest whole number since confidence is stored as integer
+  return Math.round(avgConfidence);
+};
+
 export const calculateICEScore = (initiative: Initiative): number => {
   // Equal weights for ICE scoring (1/3 each)
   const weight = 1/3;

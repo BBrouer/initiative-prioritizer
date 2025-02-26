@@ -16,11 +16,23 @@ const Index = () => {
   const { toast } = useToast();
 
   const handleSubmit = (formData: InitiativeFormData, editId?: string) => {
+    const baseInitiative = {
+      ...formData,
+      id: editId || crypto.randomUUID(),
+      createdAt: editId ? initiatives.find(i => i.id === editId)?.createdAt || new Date() : new Date(),
+    };
+
+    const newInitiative: Initiative = {
+      ...baseInitiative,
+      impact: calculateImpactScore(baseInitiative),
+      confidence: calculateConfidenceScore(baseInitiative),
+    };
+
     if (editId) {
       // Update existing initiative
       setInitiatives(initiatives.map(initiative => 
         initiative.id === editId 
-          ? { ...initiative, ...formData }
+          ? newInitiative
           : initiative
       ));
       toast({
@@ -29,11 +41,6 @@ const Index = () => {
       });
     } else {
       // Add new initiative
-      const newInitiative: Initiative = {
-        ...formData,
-        id: crypto.randomUUID(),
-        createdAt: new Date(),
-      };
       setInitiatives([...initiatives, newInitiative]);
       toast({
         title: "Initiative added",

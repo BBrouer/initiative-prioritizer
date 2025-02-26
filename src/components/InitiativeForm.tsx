@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Initiative, InitiativeFormData, ImpactLevel } from "@/types/Initiative";
-import { calculateImpactScore } from "@/lib/priorityUtils";
+import { calculateImpactScore, calculateConfidenceScore } from "@/lib/priorityUtils";
 
 interface InitiativeFormProps {
   onSubmit: (data: InitiativeFormData, editId?: string) => void;
@@ -36,8 +35,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     costImpact: "low",
     productivityImpact: "low",
     operationalImpact: "low",
-    impact: 1,
-    confidence: 3,
+    dataConfidence: "low",
+    marketConfidence: "low",
+    technicalConfidence: "low",
     ease: 3,
     status: "planned",
   });
@@ -51,8 +51,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
         costImpact: initiative.costImpact,
         productivityImpact: initiative.productivityImpact,
         operationalImpact: initiative.operationalImpact,
-        impact: initiative.impact,
-        confidence: initiative.confidence,
+        dataConfidence: initiative.dataConfidence,
+        marketConfidence: initiative.marketConfidence,
+        technicalConfidence: initiative.technicalConfidence,
         ease: initiative.ease,
         status: initiative.status,
       });
@@ -61,10 +62,16 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Calculate impact score based on hypothesis and impact levels
+    const baseInitiative = { 
+      ...formData, 
+      id: "", 
+      createdAt: new Date(),
+    };
+    // Calculate impact and confidence scores
     const calculatedData = {
       ...formData,
-      impact: calculateImpactScore({ ...formData, id: "", createdAt: new Date() }),
+      impact: calculateImpactScore(baseInitiative),
+      confidence: calculateConfidenceScore(baseInitiative),
     };
     onSubmit(calculatedData, initiative?.id);
   };
@@ -177,32 +184,79 @@ Target metric: [target value]"
             </div>
           </div>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Confidence (1-5)</Label>
-              <Slider
-                value={[formData.confidence]}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, confidence: value[0] })
-                }
-                min={1}
-                max={5}
-                step={1}
-              />
-            </div>
+          <div className="space-y-4 mt-6">
+            <h3 className="font-medium">Confidence Dimensions</h3>
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="space-y-2">
+                <Label>Data Confidence</Label>
+                <Select
+                  value={formData.dataConfidence}
+                  onValueChange={(value: ImpactLevel) =>
+                    setFormData({ ...formData, dataConfidence: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div className="space-y-2">
-              <Label>Ease (1-5)</Label>
-              <Slider
-                value={[formData.ease]}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, ease: value[0] })
-                }
-                min={1}
-                max={5}
-                step={1}
-              />
+              <div className="space-y-2">
+                <Label>Market Confidence</Label>
+                <Select
+                  value={formData.marketConfidence}
+                  onValueChange={(value: ImpactLevel) =>
+                    setFormData({ ...formData, marketConfidence: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Technical Confidence</Label>
+                <Select
+                  value={formData.technicalConfidence}
+                  onValueChange={(value: ImpactLevel) =>
+                    setFormData({ ...formData, technicalConfidence: value })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Low</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="high">High</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Ease (1-5)</Label>
+            <Slider
+              value={[formData.ease]}
+              onValueChange={(value) =>
+                setFormData({ ...formData, ease: value[0] })
+              }
+              min={1}
+              max={5}
+              step={1}
+            />
           </div>
 
           <div className="flex justify-end gap-2">
