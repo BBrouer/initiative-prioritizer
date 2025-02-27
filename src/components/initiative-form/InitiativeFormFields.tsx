@@ -29,6 +29,17 @@ export const InitiativeFormFields = ({
       </div>
       
       <div className="space-y-2">
+        <Label htmlFor="description">Description</Label>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => onUpdate("description", e.target.value)}
+          placeholder="Clearly define the problem to be solved and the desired outcome"
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
         <Label htmlFor="hypothesis">Hypothesis</Label>
         <Textarea
           id="hypothesis"
@@ -37,16 +48,6 @@ export const InitiativeFormFields = ({
           placeholder="We believe that... [your hypothesis]
 Baseline metric: [current value]
 Target metric: [target value]"
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          value={description}
-          onChange={(e) => onUpdate("description", e.target.value)}
           required
         />
       </div>
