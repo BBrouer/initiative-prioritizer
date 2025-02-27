@@ -7,7 +7,7 @@ import { InitiativeList } from "@/components/InitiativeList";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/components/ui/use-toast";
-import { calculateICEScore, calculateImpactScore, calculateConfidenceScore } from "@/lib/priorityUtils";
+import { calculateICEScore, calculateImpactScore, calculateConfidenceScore, calculateEaseScore } from "@/lib/priorityUtils";
 
 const Index = () => {
   const [initiatives, setInitiatives] = useState<Initiative[]>([]);
@@ -22,12 +22,14 @@ const Index = () => {
       createdAt: editId ? initiatives.find(i => i.id === editId)?.createdAt || new Date() : new Date(),
       impact: 1, // Temporary values for calculation
       confidence: 1, // Temporary values for calculation
+      ease: 1, // Temporary values for calculation
     };
 
     const newInitiative: Initiative = {
       ...baseInitiative,
       impact: calculateImpactScore(baseInitiative),
       confidence: calculateConfidenceScore(baseInitiative),
+      ease: calculateEaseScore(baseInitiative),
     };
 
     if (editId) {
