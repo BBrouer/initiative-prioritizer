@@ -55,6 +55,11 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
           <Badge variant="outline">Productivity: {initiative.productivityImpact}</Badge>
           <Badge variant="outline">Operational: {initiative.operationalImpact}</Badge>
         </div>
+        <div className="flex gap-2 flex-wrap">
+          <Badge variant="outline">Experience: {initiative.experienceEase}</Badge>
+          <Badge variant="outline">Complexity: {initiative.complexityEase}</Badge>
+          <Badge variant="outline">Competence: {initiative.competenceEase}</Badge>
+        </div>
       </div>
       <div className="flex justify-between items-center">
         <div className="flex gap-2">

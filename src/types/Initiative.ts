@@ -12,11 +12,14 @@ export type Initiative = {
   dataConfidence: ImpactLevel;
   marketConfidence: ImpactLevel;
   technicalConfidence: ImpactLevel;
+  experienceEase: ImpactLevel;
+  complexityEase: ImpactLevel;
+  competenceEase: ImpactLevel;
   impact: number; // 1-5 (calculated)
   confidence: number; // 1-5 (calculated)
-  ease: number; // 1-5
+  ease: number; // 1-5 (calculated)
   status: "planned" | "in-progress" | "completed";
   createdAt: Date;
 };
 
-export type InitiativeFormData = Omit<Initiative, "id" | "createdAt" | "impact" | "confidence">;
+export type InitiativeFormData = Omit<Initiative, "id" | "createdAt" | "impact" | "confidence" | "ease">;

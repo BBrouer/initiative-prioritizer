@@ -14,6 +14,7 @@ import { Initiative, InitiativeFormData, ImpactLevel } from "@/types/Initiative"
 import { InitiativeFormFields } from "./initiative-form/InitiativeFormFields";
 import { ImpactSection } from "./initiative-form/ImpactSection";
 import { ConfidenceSection } from "./initiative-form/ConfidenceSection";
+import { EaseSection } from "./initiative-form/EaseSection";
 
 interface InitiativeFormProps {
   onSubmit: (data: InitiativeFormData, editId?: string) => void;
@@ -32,7 +33,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     dataConfidence: "low",
     marketConfidence: "low",
     technicalConfidence: "low",
-    ease: 3,
+    experienceEase: "low",
+    complexityEase: "low",
+    competenceEase: "low",
     status: "planned",
   });
 
@@ -48,7 +51,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
         dataConfidence: initiative.dataConfidence,
         marketConfidence: initiative.marketConfidence,
         technicalConfidence: initiative.technicalConfidence,
-        ease: initiative.ease,
+        experienceEase: initiative.experienceEase,
+        complexityEase: initiative.complexityEase,
+        competenceEase: initiative.competenceEase,
         status: initiative.status,
       });
     }
@@ -94,18 +99,12 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
             onUpdate={handleUpdate}
           />
 
-          <div className="space-y-2">
-            <Label>Ease (1-5)</Label>
-            <Slider
-              value={[formData.ease]}
-              onValueChange={(value) =>
-                handleUpdate("ease", value[0])
-              }
-              min={1}
-              max={5}
-              step={1}
-            />
-          </div>
+          <EaseSection
+            experienceEase={formData.experienceEase}
+            complexityEase={formData.complexityEase}
+            competenceEase={formData.competenceEase}
+            onUpdate={handleUpdate}
+          />
 
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={onCancel}>

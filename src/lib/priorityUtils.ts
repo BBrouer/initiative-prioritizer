@@ -64,6 +64,18 @@ export const calculateConfidenceScore = (initiative: Initiative): number => {
   }
 };
 
+export const calculateEaseScore = (initiative: Initiative): number => {
+  // Calculate average ease from all three dimensions
+  const avgEase = (
+    getImpactScore(initiative.experienceEase) +
+    getImpactScore(initiative.complexityEase) +
+    getImpactScore(initiative.competenceEase)
+  ) / 3;
+
+  // Round to nearest whole number
+  return Math.round(avgEase);
+};
+
 export const calculateICEScore = (initiative: Initiative): number => {
   // Equal weights for ICE scoring (1/3 each)
   const weight = 1/3;
