@@ -10,7 +10,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Initiative, InitiativeFormData, ImpactLevel } from "@/types/Initiative";
+import { Initiative, InitiativeFormData, ImpactLevel, ConfidenceLevel, DataConfidenceLevel, ProcessFitLevel } from "@/types/Initiative";
 import { InitiativeFormFields } from "./initiative-form/InitiativeFormFields";
 import { ImpactSection } from "./initiative-form/ImpactSection";
 import { ConfidenceSection } from "./initiative-form/ConfidenceSection";
@@ -30,9 +30,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     costImpact: "low",
     productivityImpact: "low",
     operationalImpact: "low",
-    dataConfidence: "low",
-    marketConfidence: "low",
-    technicalConfidence: "low",
+    hypothesisConfidence: "unvalidated",
+    dataConfidence: "unexplored",
+    processFit: "low",
     experienceEase: "low",
     complexityEase: "low",
     competenceEase: "low",
@@ -48,9 +48,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
         costImpact: initiative.costImpact,
         productivityImpact: initiative.productivityImpact,
         operationalImpact: initiative.operationalImpact,
+        hypothesisConfidence: initiative.hypothesisConfidence,
         dataConfidence: initiative.dataConfidence,
-        marketConfidence: initiative.marketConfidence,
-        technicalConfidence: initiative.technicalConfidence,
+        processFit: initiative.processFit,
         experienceEase: initiative.experienceEase,
         complexityEase: initiative.complexityEase,
         competenceEase: initiative.competenceEase,
@@ -64,7 +64,7 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
     onSubmit(formData, initiative?.id);
   };
 
-  const handleUpdate = (field: string, value: string | ImpactLevel | number) => {
+  const handleUpdate = (field: string, value: string | ImpactLevel | ConfidenceLevel | DataConfidenceLevel | ProcessFitLevel) => {
     setFormData({ ...formData, [field]: value });
   };
 
@@ -93,9 +93,9 @@ export const InitiativeForm = ({ onSubmit, onCancel, initiative }: InitiativeFor
           />
 
           <ConfidenceSection
+            hypothesisConfidence={formData.hypothesisConfidence}
             dataConfidence={formData.dataConfidence}
-            marketConfidence={formData.marketConfidence}
-            technicalConfidence={formData.technicalConfidence}
+            processFit={formData.processFit}
             onUpdate={handleUpdate}
           />
 

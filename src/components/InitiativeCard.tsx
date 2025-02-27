@@ -12,20 +12,6 @@ interface InitiativeCardProps {
 export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => {
   const score = calculateICEScore(initiative);
   
-  // Get confidence level name based on score
-  const getConfidenceLabel = (confidenceScore: number): string => {
-    switch (confidenceScore) {
-      case 5:
-        return "Validated";
-      case 3:
-        return "Supported";
-      case 1:
-        return "Unvalidated";
-      default:
-        return `${confidenceScore}`;
-    }
-  };
-  
   return (
     <Card
       className="p-4 hover:shadow-lg transition-shadow duration-300 cursor-pointer animate-fadeIn"
@@ -56,6 +42,11 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
           <Badge variant="outline">Operational: {initiative.operationalImpact}</Badge>
         </div>
         <div className="flex gap-2 flex-wrap">
+          <Badge variant="outline">Hypothesis: {initiative.hypothesisConfidence}</Badge>
+          <Badge variant="outline">Data: {initiative.dataConfidence}</Badge>
+          <Badge variant="outline">Process Fit: {initiative.processFit}</Badge>
+        </div>
+        <div className="flex gap-2 flex-wrap">
           <Badge variant="outline">Experience: {initiative.experienceEase}</Badge>
           <Badge variant="outline">Complexity: {initiative.complexityEase}</Badge>
           <Badge variant="outline">Competence: {initiative.competenceEase}</Badge>
@@ -64,7 +55,7 @@ export const InitiativeCard = ({ initiative, onClick }: InitiativeCardProps) => 
       <div className="flex justify-between items-center">
         <div className="flex gap-2">
           <Badge variant="secondary">Impact: {initiative.impact}</Badge>
-          <Badge variant="secondary">Confidence: {getConfidenceLabel(initiative.confidence)}</Badge>
+          <Badge variant="secondary">Confidence: {initiative.confidence}</Badge>
           <Badge variant="secondary">Ease: {initiative.ease}</Badge>
         </div>
         <Badge 

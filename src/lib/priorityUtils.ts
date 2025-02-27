@@ -1,7 +1,46 @@
 
-import { Initiative, ImpactLevel } from "@/types/Initiative";
+import { Initiative, ImpactLevel, ConfidenceLevel, DataConfidenceLevel, ProcessFitLevel } from "@/types/Initiative";
 
 const getImpactScore = (level: ImpactLevel): number => {
+  switch (level) {
+    case "high":
+      return 5;
+    case "medium":
+      return 3;
+    case "low":
+      return 1;
+    default:
+      return 0;
+  }
+};
+
+const getHypothesisConfidenceScore = (level: ConfidenceLevel): number => {
+  switch (level) {
+    case "validated":
+      return 5;
+    case "unexplored":
+      return 3;
+    case "unvalidated":
+      return 1;
+    default:
+      return 0;
+  }
+};
+
+const getDataConfidenceScore = (level: DataConfidenceLevel): number => {
+  switch (level) {
+    case "available":
+      return 5;
+    case "incomplete":
+      return 3;
+    case "unexplored":
+      return 1;
+    default:
+      return 0;
+  }
+};
+
+const getProcessFitScore = (level: ProcessFitLevel): number => {
   switch (level) {
     case "high":
       return 5;
@@ -37,31 +76,15 @@ export const calculateConfidenceScore = (initiative: Initiative): number => {
     return 1;
   }
 
-  // Count how many confidence dimensions are "high"
-  const highConfidenceCount = [
-    initiative.dataConfidence,
-    initiative.marketConfidence,
-    initiative.technicalConfidence
-  ].filter(confidence => confidence === "high").length;
+  // Calculate average confidence from all three dimensions
+  const avgConfidence = (
+    getHypothesisConfidenceScore(initiative.hypothesisConfidence) +
+    getDataConfidenceScore(initiative.dataConfidence) +
+    getProcessFitScore(initiative.processFit)
+  ) / 3;
 
-  // Count how many confidence dimensions are at least "medium"
-  const mediumOrHighConfidenceCount = [
-    initiative.dataConfidence,
-    initiative.marketConfidence,
-    initiative.technicalConfidence
-  ].filter(confidence => confidence === "high" || confidence === "medium").length;
-
-  // Determine confidence level based on validation state
-  if (highConfidenceCount >= 2) {
-    // Hypothesis validated (at least 2 high confidence dimensions)
-    return 5;
-  } else if (mediumOrHighConfidenceCount >= 2) {
-    // Hypothesis supported (at least 2 medium or higher confidence dimensions)
-    return 3;
-  } else {
-    // Hypothesis not supported
-    return 1;
-  }
+  // Round to nearest whole number
+  return Math.round(avgConfidence);
 };
 
 export const calculateEaseScore = (initiative: Initiative): number => {

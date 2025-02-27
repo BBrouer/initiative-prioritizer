@@ -1,5 +1,8 @@
 
 export type ImpactLevel = "low" | "medium" | "high";
+export type ConfidenceLevel = "unvalidated" | "unexplored" | "validated";
+export type DataConfidenceLevel = "unexplored" | "incomplete" | "available";
+export type ProcessFitLevel = "low" | "medium" | "high";
 
 export type Initiative = {
   id: string;
@@ -9,9 +12,9 @@ export type Initiative = {
   costImpact: ImpactLevel;
   productivityImpact: ImpactLevel;
   operationalImpact: ImpactLevel;
-  dataConfidence: ImpactLevel;
-  marketConfidence: ImpactLevel;
-  technicalConfidence: ImpactLevel;
+  hypothesisConfidence: ConfidenceLevel;
+  dataConfidence: DataConfidenceLevel;
+  processFit: ProcessFitLevel;
   experienceEase: ImpactLevel;
   complexityEase: ImpactLevel;
   competenceEase: ImpactLevel;
